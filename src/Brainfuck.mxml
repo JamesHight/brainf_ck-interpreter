@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" creationComplete="init()" xmlns:bf="com.zavoo.brainfuck.*" viewSourceURL="srcview/index.html">
+	<mx:Script>
+		<![CDATA[
+			
+			import mx.collections.ArrayCollection;
+			import com.zavoo.brainfuck.BrainfuckInterpreter;
+			
+			[Bindable]
+			public var examples:Array;
+			
+			include 'examples.as';
+			
+			public var codeArray:ByteArray = new ByteArray();
+			public var ptr:uint;
+			public var out:String;
+			public function init():void {
+				examples = bfExamples;
+				brainfuckShell.addEventListener(BrainfuckShell.RUN_COMMAND, runCode);
+				
+			}
+						
+			private function loadExample():void {
+				if (cmbExamples.selectedIndex > -1) {
+					txtCode.text = cmbExamples.selectedItem.data;
+					txtSource.text = cmbExamples.selectedItem.source;
+				}
+			}		
+			
+			private function runCode(event:Event = null):void {
+				brainfuckShell.runCode(txtCode.text);
+			}
+			
+			
+		]]>
+	</mx:Script>
+	<mx:HBox x="0" y="0" width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" backgroundColor="#000000">
+		<mx:Panel x="0" y="0" width="100%" height="100%" layout="vertical" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" title="Brainfuck Interpreter">
+			<mx:HBox x="10" y="10" width="100%">
+				<mx:ComboBox id="cmbExamples" dataProvider="{examples}" text="[Select An Example]" change="loadExample()"></mx:ComboBox>
+				<mx:Button label="Run Code" click="runCode()"/>
+			</mx:HBox>
+			<mx:VDividedBox x="0" y="0" width="100%" height="100%">
+				<mx:VBox width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10">
+					<mx:HBox width="100%">					
+						<mx:Label x="10" y="10" text="Code Source:" fontSize="12" fontWeight="bold"/>
+						<mx:TextInput editable="false" id="txtSource" width="100%" borderStyle="none"/>
+					</mx:HBox>
+					<mx:TextArea width="100%" height="100%" id="txtCode"/>
+					
+				</mx:VBox>
+				<mx:VBox width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10">
+					<mx:Label text="Output:" fontWeight="bold"/>
+					<bf:BrainfuckShell width="100%" height="100%" id="brainfuckShell" />					
+				</mx:VBox>
+			</mx:VDividedBox>
+		</mx:Panel>
+	</mx:HBox>
+</mx:Application>
